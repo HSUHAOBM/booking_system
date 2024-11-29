@@ -1,0 +1,83 @@
+/* Global Body Styling */
+body {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Auth Container */
+.auth-container {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Title Styling */
+.auth-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Form Inputs */
+.auth-form .form-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.auth-form .form-control {
+    height: 50px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.auth-form .form-control:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+}
+
+/* Submit Button */
+.auth-form .btn {
+    height: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    background-color: #6c63ff;
+    color: white;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.auth-form .btn:hover {
+    background-color: #5a55d6;
+    box-shadow: 0 4px 8px rgba(108, 99, 255, 0.3);
+}
+
+/* Link Styling */
+.auth-switch {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+.auth-switch a {
+    color: #6c63ff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}

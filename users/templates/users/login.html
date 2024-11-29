@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入 - 速約</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            width: 500px; /* 固定寬度與註冊頁一致 */
+            max-width: 90%; /* 小螢幕適應 */
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px; /* 增加欄位之間的間距 */
+        }
+
+        /* 確保所有輸入框樣式一致，包括 type="text" */
+        input[type="password"], input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 2px solid #1e90ff;
+            box-sizing: border-box;
+        }
+
+        input[type="email"].invalid {
+            border-color: #FF0000; /* Email 格式不符時顯示紅框 */
+        }
+
+        .toggle-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #1e90ff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .password-field {
+            position: relative; /* 為顯示密碼按鈕定位 */
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: none;
+            background-color: #1e90ff;
+            color: white;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .submit-button:disabled {
+            background-color: #444;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        .links {
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .links a {
+            color: #1e90ff;
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>登入 - 速約</h2>
+        <!-- 帳號欄位 -->
+        <div class="form-group">
+            <input type="email" id="email" placeholder="輸入信箱" oninput="validateForm()">
+        </div>
+        <!-- 密碼欄位 -->
+        <div class="form-group password-field">
+            <input type="password" id="password" placeholder="密碼" oninput="validateForm()">
+            <button type="button" class="toggle-button" onclick="togglePassword()">SHOW</button>
+        </div>
+        <!-- 登入按鈕 -->
+        <button id="loginButton" class="submit-button" disabled onclick="submitLogin()">登入</button>
+        <!-- 註冊連結 -->
+        <div class="links">
+            還沒有帳號？ <a href="{% url 'users:register' %}">註冊</a>
+        </div>
+    </div>
+
+    <script>
+        // 顯示/隱藏密碼
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const toggleButton = document.querySelector(".toggle-button");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleButton.textContent = "HIDE";
+            } else {
+                passwordField.type = "password";
+                toggleButton.textContent = "SHOW";
+            }
+        }
+
+        // 表單驗證：檢查帳號格式與密碼是否填寫
+        function validateForm() {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const loginButton = document.getElementById("loginButton");
+
+            const emailValid = validateEmail(email);
+
+            // 更新 Email 欄位的樣式（合法為藍框，不合法為紅框）
+            const emailField = document.getElementById("email");
+            if (emailValid) {
+                emailField.classList.remove("invalid");
+            } else {
+                emailField.classList.add("invalid");
+            }
+
+            // 如果 Email 合法且密碼非空，啟用登入按鈕
+            if (emailValid && password) {
+                loginButton.disabled = false;
+            } else {
+                loginButton.disabled = true;
+            }
+        }
+
+        // 驗證 Email 格式是否正確
+        function validateEmail(email) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 簡單的 Email 格式驗證正則
+            return emailPattern.test(email);
+        }
+
+        // 模擬提交登入
+        function submitLogin() {
+            alert("登入成功！");
+        }
+    </script>
+</body>
+</html>

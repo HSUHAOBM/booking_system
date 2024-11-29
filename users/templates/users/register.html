@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>註冊 - 速約</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            width: 500px; /* 固定寬度 */
+            max-width: 90%; /* 小螢幕適應 */
+            margin: 0 auto; /* 水平居中 */
+        }
+
+        .form-group {
+            margin-bottom: 20px; /* 增加欄位之間的間距 */
+        }
+
+        input[type="password"], input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 2px solid #1e90ff;
+            box-sizing: border-box;
+        }
+
+        .toggle-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #1e90ff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .criteria {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+
+        .criteria div {
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .invalid {
+            background-color: #444;
+            color: #aaa;
+        }
+
+        .valid {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: none;
+            background-color: #444;
+            color: #aaa;
+            cursor: not-allowed;
+            margin-top: 15px;
+        }
+
+        .submit-button.enabled {
+            background-color: #1e90ff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .links {
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .links a {
+            color: #1e90ff;
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>註冊 - 速約</h2>
+        <!-- 信箱欄位 -->
+        <div class="form-group">
+            <input type="email" id="email" placeholder="輸入信箱" oninput="validateEmail()">
+        </div>
+        <!-- 密碼欄位 -->
+        <div class="form-group password-field">
+            <input type="password" id="password" placeholder="密碼" oninput="validatePassword()">
+            <button class="toggle-button" onclick="togglePassword()">SHOW</button>
+        </div>
+        <!-- 再次輸入密碼 -->
+        <div class="form-group">
+            <input type="password" id="confirm-password" placeholder="再次輸入密碼" oninput="validateConfirmPassword()">
+        </div>
+        <!-- 密碼條件 -->
+        <div class="criteria">
+            <div id="length" class="invalid">• 12 characters</div>
+            <div id="letter" class="invalid">• 1 Uppercase & 1 Lowercase Letter</div>
+            <div id="number" class="invalid">• Number</div>
+        </div>
+        <!-- 提交按鈕 -->
+        <button id="submitButton" class="submit-button" disabled onclick="submitForm()">註冊</button>
+        <!-- 已有帳號連結 -->
+        <div class="links">
+            已有帳號？ <a href="{% url 'users:login' %}">登入</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const toggleButton = document.querySelector(".toggle-button");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleButton.textContent = "HIDE";
+            } else {
+                passwordField.type = "password";
+                toggleButton.textContent = "SHOW";
+            }
+        }
+
+        function validateEmail() {
+            const email = document.getElementById("email").value;
+            const emailField = document.getElementById("email");
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 簡單的 Email 格式驗證正則
+            if (emailPattern.test(email)) {
+                emailField.style.borderColor = "#4CAF50"; // 綠色表示合法
+            } else {
+                emailField.style.borderColor = "#FF0000"; // 紅色表示不合法
+            }
+            validateSubmitButton();
+        }
+
+        function validatePassword() {
+            const password = document.getElementById("password").value;
+            const lengthCriteria = document.getElementById("length");
+            const letterCriteria = document.getElementById("letter");
+            const numberCriteria = document.getElementById("number");
+
+            // Check length
+            const lengthValid = password.length >= 12;
+            updateCriteria(lengthCriteria, lengthValid);
+
+            // Check for at least 1 uppercase and 1 lowercase letter
+            const uppercaseValid = /[A-Z]/.test(password);
+            const lowercaseValid = /[a-z]/.test(password);
+            const letterValid = uppercaseValid && lowercaseValid;
+            updateCriteria(letterCriteria, letterValid);
+
+            // Check for number
+            const numberValid = /\d/.test(password);
+            updateCriteria(numberCriteria, numberValid);
+
+            validateSubmitButton();
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+
+            if (confirmPassword === password) {
+                document.getElementById("confirm-password").style.borderColor = "#4CAF50";
+            } else {
+                document.getElementById("confirm-password").style.borderColor = "#FF0000";
+            }
+
+            validateSubmitButton();
+        }
+
+        function validateSubmitButton() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+
+            const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); // Email 格式檢查
+            const lengthValid = document.getElementById("length").classList.contains("valid");
+            const letterValid = document.getElementById("letter").classList.contains("valid");
+            const numberValid = document.getElementById("number").classList.contains("valid");
+
+            const submitButton = document.getElementById("submitButton");
+
+            if (emailValid && lengthValid && letterValid && numberValid && password === confirmPassword) {
+                submitButton.classList.add("enabled");
+                submitButton.disabled = false;
+            } else {
+                submitButton.classList.remove("enabled");
+                submitButton.disabled = true;
+            }
+        }
+
+        function updateCriteria(element, isValid) {
+            if (isValid) {
+                element.classList.add("valid");
+                element.classList.remove("invalid");
+            } else {
+                element.classList.add("invalid");
+                element.classList.remove("valid");
+            }
+        }
+
+        function submitForm() {
+            alert("註冊成功！");
+        }
+    </script>
+</body>
+</html>
