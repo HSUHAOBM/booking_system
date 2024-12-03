@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>註冊 - 速約</title>
+    <title>註冊 - 速速</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -105,32 +105,62 @@
         .links a:hover {
             text-decoration: underline;
         }
+        .messages {
+            list-style: none; /* 去掉列表符號 */
+            padding: 0; /* 移除多餘內間距 */
+            margin-bottom: 15px; /* 與密碼條件保持距離 */
+        }
+
+        .message {
+            color: #FF0000; /* 紅色文字 */
+            font-weight: bold; /* 粗體字 */
+            text-align: left; /* 靠左對齊 */
+            margin: 5px 0; /* 每條訊息之間的間距 */
+            font-size: 1.2em; /* 字體稍微增大 */
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>註冊 - 速約</h2>
-        <!-- 信箱欄位 -->
-        <div class="form-group">
-            <input type="email" id="email" placeholder="輸入信箱" oninput="validateEmail()">
-        </div>
-        <!-- 密碼欄位 -->
-        <div class="form-group password-field">
-            <input type="password" id="password" placeholder="密碼" oninput="validatePassword()">
-            <button class="toggle-button" onclick="togglePassword()">SHOW</button>
-        </div>
-        <!-- 再次輸入密碼 -->
-        <div class="form-group">
-            <input type="password" id="confirm-password" placeholder="再次輸入密碼" oninput="validateConfirmPassword()">
-        </div>
-        <!-- 密碼條件 -->
-        <div class="criteria">
-            <div id="length" class="invalid">• 12 characters</div>
-            <div id="letter" class="invalid">• 1 Uppercase & 1 Lowercase Letter</div>
-            <div id="number" class="invalid">• Number</div>
-        </div>
-        <!-- 提交按鈕 -->
-        <button id="submitButton" class="submit-button" disabled onclick="submitForm()">註冊</button>
+        <h2>註冊 - </h2>
+        <form method="POST" action="{% url 'users:register' %}">
+            {% csrf_token %}
+            <!-- 使用者名稱欄位 -->
+            <div class="form-group">
+                <input type="text" id="username" name="username" placeholder="輸入使用者暱稱" oninput="validateUsername()" required value="{{ username }}">
+            </div>
+            <!-- 信箱欄位 -->
+            <div class="form-group">
+                <input type="email" id="email" name="email" placeholder="輸入信箱" oninput="validateEmail()" value="{{ email }}">
+            </div>
+            <!-- 密碼欄位 -->
+            <div class="form-group password-field">
+                <input type="password" id="password" name="password" placeholder="密碼" oninput="validatePassword()">
+                <button type="button" class="toggle-button" onclick="togglePassword()">SHOW</button>
+            </div>
+            <!-- 再次輸入密碼 -->
+            <div class="form-group">
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="再次輸入密碼" oninput="validateConfirmPassword()">
+            </div>
+
+            <!-- 訊息區域 -->
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="message {{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <!-- 密碼條件 -->
+            <div class="criteria">
+                <div id="length" class="invalid">• 12 characters</div>
+                <div id="letter" class="invalid">• 1 Uppercase & 1 Lowercase Letter</div>
+                <div id="number" class="invalid">• Number</div>
+            </div>
+            <!-- 提交按鈕 -->
+            <button id="submitButton" class="submit-button" disabled>註冊</button>
+        </form>
         <!-- 已有帳號連結 -->
         <div class="links">
             已有帳號？ <a href="{% url 'users:login' %}">登入</a>
@@ -138,6 +168,21 @@
     </div>
 
     <script>
+        function validateUsername() {
+            const username = document.getElementById("username").value.trim();
+            const usernameField = document.getElementById("username");
+
+            // 基本驗證：字符，不含特殊字符
+            const usernameValid = /^[a-zA-Z0-9_]{1,}$/.test(username);
+            if (usernameValid) {
+                usernameField.style.borderColor = "#4CAF50"; // 綠色表示合法
+            } else {
+                usernameField.style.borderColor = "#FF0000"; // 紅色表示不合法
+            }
+
+            validateSubmitButton();
+        }
+
         function togglePassword() {
             const passwordField = document.getElementById("password");
             const toggleButton = document.querySelector(".toggle-button");

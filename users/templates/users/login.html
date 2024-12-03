@@ -18,16 +18,15 @@
 
         .container {
             text-align: center;
-            width: 500px; /* 固定寬度與註冊頁一致 */
-            max-width: 90%; /* 小螢幕適應 */
+            width: 500px;
+            max-width: 90%;
             margin: 0 auto;
         }
 
         .form-group {
-            margin-bottom: 20px; /* 增加欄位之間的間距 */
+            margin-bottom: 20px;
         }
 
-        /* 確保所有輸入框樣式一致，包括 type="text" */
         input[type="password"], input[type="text"], input[type="email"] {
             width: 100%;
             padding: 10px;
@@ -88,22 +87,48 @@
         .links a:hover {
             text-decoration: underline;
         }
+
+        .messages {
+            list-style: none; /* 去掉列表符號 */
+            padding: 0; /* 移除多餘內間距 */
+            margin-bottom: 15px; /* 與密碼條件保持距離 */
+        }
+
+        .message {
+            color: #FF0000; /* 紅色文字 */
+            font-weight: bold; /* 粗體字 */
+            text-align: left; /* 靠左對齊 */
+            margin: 5px 0; /* 每條訊息之間的間距 */
+            font-size: 1.2em; /* 字體稍微增大 */
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>登入 - 速約</h2>
-        <!-- 帳號欄位 -->
-        <div class="form-group">
-            <input type="email" id="email" placeholder="輸入信箱" oninput="validateForm()">
-        </div>
-        <!-- 密碼欄位 -->
-        <div class="form-group password-field">
-            <input type="password" id="password" placeholder="密碼" oninput="validateForm()">
-            <button type="button" class="toggle-button" onclick="togglePassword()">SHOW</button>
-        </div>
-        <!-- 登入按鈕 -->
-        <button id="loginButton" class="submit-button" disabled onclick="submitLogin()">登入</button>
+        <!-- 訊息區域 -->
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="message {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <!-- 登入表單 -->
+        <form method="POST" action="{% url 'users:login' %}">
+            {% csrf_token %}
+            <!-- 信箱欄位 -->
+            <div class="form-group">
+                <input type="email" id="email" name="email" placeholder="輸入信箱" oninput="validateForm()" required value="{{ email }}">
+            </div>
+            <!-- 密碼欄位 -->
+            <div class="form-group password-field">
+                <input type="password" id="password" name="password" placeholder="密碼" oninput="validateForm()" required>
+                <button type="button" class="toggle-button" onclick="togglePassword()">SHOW</button>
+            </div>
+            <!-- 登入按鈕 -->
+            <button id="loginButton" class="submit-button" disabled>登入</button>
+        </form>
         <!-- 註冊連結 -->
         <div class="links">
             還沒有帳號？ <a href="{% url 'users:register' %}">註冊</a>
@@ -152,11 +177,6 @@
         function validateEmail(email) {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 簡單的 Email 格式驗證正則
             return emailPattern.test(email);
-        }
-
-        // 模擬提交登入
-        function submitLogin() {
-            alert("登入成功！");
         }
     </script>
 </body>
