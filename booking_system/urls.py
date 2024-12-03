@@ -19,5 +19,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("users/", include("users.urls", namespace="users"))  # 添加 namespace
+    path("users/", include("users.urls", namespace="users")),
+
+    # 新增安全驗證路由
+    path("security_check/", include("security_check.urls")),
 ]

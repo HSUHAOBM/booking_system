@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-!3736ru1w+=y)qd!hwl6wja-!9u%a)*cns&0w4b!ab9n@k^cs-"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -40,6 +41,8 @@ INSTALLED_APPS = [
     'users',         # 用戶應用
     'services',      # 服務應用
     'appointments',  # 預約應用
+    "security_check",  # 驗證應用
+
 ]
 
 MIDDLEWARE = [
@@ -50,6 +53,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "security_check.middleware.SecurityCheckMiddleware",
 ]
 
 ROOT_URLCONF = "booking_system.urls"
@@ -132,3 +136,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 AUTH_USER_MODEL = 'users.User'
+
+
+# Turnstile Secret Key
+SECURITY_CHECK_SECRET_KEY = config("SECURITY_CHECK_SECRET_KEY")
+
+# Session 過期時間 20 分鐘
+SESSION_COOKIE_AGE = 1200

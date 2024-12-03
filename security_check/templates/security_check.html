@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全驗證</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .hint {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 20px;
+            text-align: left; /* 靠左對齊 */
+        }
+
+        .hint ul {
+            padding-left: 20px; /* 增加列表的縮進 */
+        }
+
+        .hint pre {
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            overflow-x: auto;
+        }
+
+        .ip-display {
+            margin-top: 20px;
+            font-size: 1em;
+            font-weight: bold;
+            background-color: #e6f7ff;
+            padding: 10px;
+            border-radius: 5px;
+            color: #0056b3;
+            border: 1px solid #91d5ff;
+        }
+
+        .error-message {
+            color: #ff4d4f;
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <h2>安全驗證</h2>
+        <p>請完成以下驗證以繼續訪問網站。</p>
+        <form method="POST" id="securityForm">
+            {% csrf_token %}
+            <div class="cf-turnstile"
+                 data-sitekey="0x4AAAAAAA1HvEFlVYVvgTQ0"
+                 data-callback="onSuccess"
+                 data-error-callback="onError">
+            </div>
+        </form>
+        <!-- 錯誤消息 -->
+        <div id="errorMessage" class="error-message">
+            驗證失敗，請稍後再試！
+        </div>
+        <!-- 使用者 IP 顯示 -->
+        <div class="ip-display">
+            您的 IP 地址：{{ client_ip }}
+        </div>
+        <div class="hint">
+            <p>某些情況下會需要驗證請求是來自真實的人類。</p>
+            <p>例如：</p>
+            <ul>
+                <li>您的操作頻率過快。</li>
+                <li>您的網絡環境異常（VPN 或代理）。</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        function onSuccess() {
+            // 驗證成功後，自動提交表單
+            document.getElementById("securityForm").submit();
+        }
+
+        function onError() {
+            // 驗證失敗時顯示錯誤提示
+            const errorMessage = document.getElementById("errorMessage");
+            errorMessage.style.display = "block";
+        }
+    </script>
+</body>
+</html>
