@@ -1,4 +1,3 @@
-# appointments/models
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -9,19 +8,18 @@ class Appointment(models.Model):
     """
     customer = models.ForeignKey(
         'users.User', on_delete=models.CASCADE,
-        limit_choices_to={'role': 'customer'},
-        help_text="關聯到預約的客人，用戶角色必須是 '客人'"
+        help_text="關聯到預約的客人"
     )
     service = models.ForeignKey(
-        'services.Service', on_delete=models.CASCADE,
+        'store.Service', on_delete=models.CASCADE,  # 更新引用
         help_text="關聯到預約的服務，例如剪髮、按摩等"
     )
     staff = models.ForeignKey(
-        'users.Staff', on_delete=models.CASCADE,
+        'store.Staff', on_delete=models.CASCADE,
         help_text="關聯到提供服務的服務人員"
     )
     timeslot = models.OneToOneField(
-        'services.TimeSlot', on_delete=models.CASCADE, related_name="appointments",
+        'store.TimeSlot', on_delete=models.CASCADE, related_name="appointments",  # 更新引用
         help_text="關聯到具體的預約時間段"
     )
     status = models.CharField(

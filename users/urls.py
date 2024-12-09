@@ -20,7 +20,6 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),  # 登出（可選）
 
     path('customer_dashboard/', customer_dashboard, name='customer_dashboard'),
-    path("admin_dashboard/", admin_dashboard, name="admin_dashboard"),
 
-
+    path('dashboard/', views.dashboard, name='dashboard'),  # 登入後的主頁
 ]

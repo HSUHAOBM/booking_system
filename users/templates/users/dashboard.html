@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}儀表板{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1>歡迎回來，{{ user.username }}</h1>
+    <p>這是您的主頁，您可以選擇左上方的選單進行操作。</p>
+</div>
+{% endblock %}

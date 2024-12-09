@@ -41,10 +41,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'users',         # 用戶應用
-    'services',      # 服務應用
+    'store',         # 店家
     'appointments',  # 預約應用
     "security_check",  # 驗證應用
-
 ]
 
 MIDDLEWARE = [
@@ -63,7 +62,7 @@ ROOT_URLCONF = "booking_system.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -195,3 +194,6 @@ LOGGING = {
         },
     },
 }
+
+# 登入後跳轉路徑
+LOGIN_REDIRECT_URL = '/dashboard/'

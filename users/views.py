@@ -2,13 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login as auth_login, get_user_model, logout as auth_logout
-from .models import Store
 from django.db import transaction
 import logging
 from booking_system.utils import get_client_ip
 from django.utils.html import escape
 import re
 from django.db.utils import IntegrityError
+from django.contrib.auth.decorators import login_required
 
 logger = logging.getLogger(__name__)
 
@@ -139,7 +139,7 @@ def login(request):
         user, error_message = _authenticate_user(email, password)  # 獲取用戶和錯誤訊息
         if user:
             auth_login(request, user)  # 登入用戶
-            return redirect("users:customer_dashboard")
+            return redirect("users:dashboard")
         else:
             if error_message:
                 messages.error(request, error_message)  # 添加錯誤訊息
@@ -174,3 +174,8 @@ def logout(request):
         request.session["security_verified"] = True
     messages.success(request, "您已成功登出！")
     return redirect("users:login")
+
+
+@login_required
+def dashboard(request):
+    return render(request, 'users/dashboard.html')

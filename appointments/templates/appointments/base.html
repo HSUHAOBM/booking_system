@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}預約功能{% endblock %}
+
+{% block content %}
+<div class="main-layout">
+    <!-- 左側功能選單 -->
+    <aside class="sidebar">
+        <nav>
+            <ul>
+                <li><a href="{% url 'appointments:my_appointments' %}" class="{% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}">我的預約</a></li>
+                <li><a href="{% url 'appointments:appointment_history' %}" class="{% if request.resolver_match.url_name == 'appointment_history' %}active{% endif %}">預約紀錄</a></li>
+                <li><a href="{% url 'appointments:review_history' %}" class="{% if request.resolver_match.url_name == 'review_history' %}active{% endif %}">評價紀錄</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- 右側內容區域 -->
+    <main class="content">
+        {% block feature_content %}{% endblock %}
+    </main>
+</div>
+{% endblock %}

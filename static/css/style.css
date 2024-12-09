@@ -1,0 +1,137 @@
+/* 通用樣式 */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 頂部導航欄 */
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 20px;
+}
+
+/* LOGO（首頁按鈕） */
+.logo-item {
+    text-decoration: none;
+    position: relative;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* 中間功能按鈕 */
+.icon-nav {
+    display: flex;
+    gap: 20px;
+}
+
+.icon-item {
+    position: relative;
+    text-decoration: none;
+    color: #888;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #f5f6f8;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.icon-item:hover {
+    background-color: #e4e6eb;
+    color: #1877f2;
+}
+
+/* 懸停提示文字 */
+.icon-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity 0.3s;
+}
+
+.icon-item:hover::after {
+    opacity: 1;
+}
+
+/* 頁腳 */
+.footer {
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 10px 20px;
+    color: #666;
+    margin-top: auto;
+    border-top: 1px solid #ddd;
+}
+
+
+
+
+/* 功能頁布局 */
+.main-layout {
+    display: flex;
+    min-height: calc(100vh - 60px); /* 扣除頂部導航欄的高度 */
+}
+
+/* 左側功能選單 */
+.sidebar {
+    width: 250px;
+    background-color: #f5f6f8;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 15px;
+}
+
+.sidebar nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    padding: 10px;
+    display: block;
+    border-radius: 5px;
+}
+
+.sidebar nav ul li a:hover,
+.sidebar nav ul li a.active {
+    background-color: #e4e6eb;
+    color: #1877f2;
+}
+
+/* 右側內容區域 */
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #fff;
+}

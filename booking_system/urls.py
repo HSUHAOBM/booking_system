@@ -20,7 +20,8 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("users.urls", namespace="users")),
-
+    path('appointments/', include('appointments.urls', namespace='appointments')),
+    path('store/', include('store.urls', namespace='store')),
     # 新增安全驗證路由
     path("security_check/", include("security_check.urls")),
 ]
