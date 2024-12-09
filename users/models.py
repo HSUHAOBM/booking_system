@@ -6,22 +6,13 @@ from django.utils.timezone import now
 
 class User(AbstractUser):
     """
-    自定義用戶模型，用於區分不同角色（商家、客人、管理員、服務人員）。
+    自定義用戶模型。
     """
-    ROLE_CHOICES = (
-        ('merchant', '商家'),   # 負責店鋪的管理
-        ('customer', '客人'),   # 使用預約服務的客人
-        ('admin', '管理員'),    # 系統管理員
-        ('staff', '服務人員'),  # 店鋪內的服務人員
-    )
-    role = models.CharField(
-        max_length=10, choices=ROLE_CHOICES, default='customer',
-        help_text="用戶角色，例如商家、客人、管理員等"
-    )
-    related_store = models.ForeignKey(
-        'Store', on_delete=models.SET_NULL, null=True, blank=True,
-        help_text="服務人員或管理員所關聯的店鋪（可選）",
-        related_name="store_users"
+
+    related_stores = models.ManyToManyField(
+        'Store', blank=True,
+        help_text="服務人員或管理員所關聯的多個店鋪",
+        related_name="store_users"  # 反向查詢用戶時的名稱
     )
     phone_number = models.CharField(
         max_length=15, blank=True, null=True,

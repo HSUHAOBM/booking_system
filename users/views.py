@@ -2,14 +2,43 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login as auth_login, get_user_model, logout as auth_logout
+from .models import Store
+from django.db import transaction
+import logging
+from booking_system.utils import get_client_ip
+from django.utils.html import escape
+import re
+from django.db.utils import IntegrityError
+
+logger = logging.getLogger(__name__)
 
 # 使用自訂的用戶模型
 User = get_user_model()
 
 
+logger = logging.getLogger(__name__)
+
+
+def validate_mobile_number(phone_number):
+    """
+    驗證手機號碼格式：台灣手機號碼需符合 09xxxxxxxx 格式
+    """
+    return re.match(r'^09\d{8}$', phone_number)
+
+
+def is_unique_username(username):
+    """檢查使用者名稱是否唯一"""
+    return not User.objects.filter(username=username).exists()
+
+
+def is_unique_email(email):
+    """檢查電子郵件是否唯一"""
+    return not User.objects.filter(email=email).exists()
+
+
 def validate_password_strength(password):
     """
-    驗證密碼的強度：長度、大小寫字母和數字要求。
+    驗證密碼的強度：長度、大小寫字母和數字要求
     """
     if len(password) < 12:
         raise ValidationError("密碼長度至少為 12 個字符。")
@@ -22,48 +51,75 @@ def validate_password_strength(password):
 
 
 def register(request):
-    """
-    處理註冊邏輯：用戶自定義 username，並以 email 作為登入憑據
-    """
+    """通用註冊邏輯"""
     if request.method == "POST":
-        username = request.POST.get('username', '')  # 預設為空字串
-        email = request.POST.get('email', '')  # 預設為空字串
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm-password')
+        username = escape(request.POST.get('username', '').strip())
+        email = escape(request.POST.get('email', '').strip())
+        mobile_number = request.POST.get('phoneNumber', '').strip()
+        password = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirmPassword', '')
+        ip_address = request.META.get('REMOTE_ADDR', '')  # 提取 IP 地址
 
-        # 驗證密碼一致性
+        logger.info(
+            f"收到註冊請求: username={username}, email={email}, ip={ip_address}")
+
+        # 驗證手機號碼
+        if not validate_mobile_number(mobile_number):
+            messages.error(request, "請輸入有效的手機號碼（格式：09xxxxxxxx）。")
+            return render(request, 'users/register.html', {
+                'username': username, 'email': email, 'phone_number': mobile_number
+            })
+
+        # 密碼一致性檢查
         if password != confirm_password:
             messages.error(request, "密碼與確認密碼不一致。")
-            return render(request, "users/register.html", {'username': username, 'email': email})
-        # 驗證密碼強度
+            return render(request, 'users/register.html', {
+                'username': username, 'email': email, 'phone_number': mobile_number
+            })
+
+        # 密碼強度檢查
         try:
             validate_password_strength(password)
         except ValidationError as e:
-            messages.error(request, e.messages[0])  # 顯示第一條錯誤訊息
-            return render(request, "users/register.html", {'username': username, 'email': email})
+            for error in e.messages:
+                messages.error(request, error)
+            return render(request, 'users/register.html', {
+                'username': username, 'email': email, 'phone_number': mobile_number
+            })
 
-        # 檢查 username 是否已存在
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "該使用者名稱已被使用，請嘗試其他名稱。")
-            return render(request, "users/register.html", {'username': username, 'email': email})
-
-        # 檢查 Email 是否已存在
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "該信箱已被註冊。")
-            return render(request, "users/register.html", {'username': username, 'email': email})
+        # 唯一性檢查
+        if not is_unique_username(username):
+            messages.error(request, "該使用者名稱已被使用。")
+            return render(request, 'users/register.html', {
+                'username': username, 'email': email, 'phone_number': mobile_number
+            })
+        if not is_unique_email(email):
+            messages.error(request, "該電子郵件已被註冊。")
+            return render(request, 'users/register.html', {
+                'username': username, 'email': email, 'phone_number': mobile_number
+            })
 
         # 創建用戶
         try:
             user = User.objects.create_user(
-                username=username, email=email, password=password)
-            user.save()
+                username=username,
+                email=email,
+                password=password,
+                phone_number=mobile_number,
+            )
             messages.success(request, "註冊成功，請登入！")
+            logger.info(
+                f"用戶註冊成功: username={username}, email={email}, ip={ip_address}")
             return redirect('users:login')
+        except IntegrityError:
+            messages.error(request, "註冊失敗，請稍後再試。")
+            logger.error(
+                f"用戶註冊失敗（數據庫錯誤）: username={username}, email={email}, ip={ip_address}")
         except Exception as e:
             messages.error(request, f"註冊失敗，請稍後再試。錯誤訊息：{str(e)}")
-            return render(request, "users/register.html", {'username': username, 'email': email})
+            logger.exception(f"用戶註冊失敗（未知錯誤）錯誤訊息：{str(e)}")
 
-    return render(request, "users/register.html", {'username': '', 'email': ''})
+    return render(request, 'users/register.html')
 
 
 def login(request):
@@ -79,9 +135,11 @@ def login(request):
             messages.error(request, "請輸入信箱和密碼")
             return render(request, "users/login.html", {"email": email})
 
+        # 驗證用戶
         user, error_message = _authenticate_user(email, password)  # 獲取用戶和錯誤訊息
         if user:
-            return _redirect_user_by_role(request, user)
+            auth_login(request, user)  # 登入用戶
+            return redirect("users:customer_dashboard")
         else:
             if error_message:
                 messages.error(request, error_message)  # 添加錯誤訊息
@@ -100,25 +158,9 @@ def _authenticate_user(email, password):
         if user.check_password(password):
             return user, None  # 驗證成功
         else:
-            return None, "密碼錯誤，請重新嘗試。"  # 密碼錯誤
+            return None, "信箱或密碼不正確"
     except User.DoesNotExist:
-        return None, "該信箱尚未註冊。"  # 用戶不存在
-
-
-def _redirect_user_by_role(request, user):
-    """
-    根據用戶角色重定向到相應的頁面。
-    """
-    auth_login(request, user)
-    messages.success(request, "登入成功！")
-
-    if user.role in ["merchant", "staff", "admin"]:
-        return redirect("users:admin_dashboard")
-    elif user.role == "customer":
-        return redirect("users:customer_dashboard")
-    else:
-        messages.error(request, "無法識別用戶角色，請聯繫管理員。")
-        return redirect("home")
+        return None, "信箱或密碼不正確"
 
 
 def logout(request):

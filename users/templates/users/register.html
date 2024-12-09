@@ -27,7 +27,7 @@
             margin-bottom: 20px; /* 增加欄位之間的間距 */
         }
 
-        input[type="password"], input[type="text"], input[type="email"] {
+        input[type="password"], input[type="text"], input[type="email"], input[type="tel"] {
             width: 100%;
             padding: 10px;
             font-size: 1em;
@@ -36,7 +36,7 @@
             box-sizing: border-box;
         }
 
-        .toggle-button {
+        .toggleButton {
             position: absolute;
             right: 10px;
             top: 50%;
@@ -133,14 +133,18 @@
             <div class="form-group">
                 <input type="email" id="email" name="email" placeholder="輸入信箱" oninput="validateEmail()" value="{{ email }}">
             </div>
+            <!-- 電話號碼欄位 -->
+            <div class="form-group">
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="輸入手機號碼" oninput="validatePhone()" required value="{{ phoneNumber }}">
+            </div>
             <!-- 密碼欄位 -->
             <div class="form-group password-field">
-                <input type="password" id="password" name="password" placeholder="密碼" oninput="validatePassword()">
-                <button type="button" class="toggle-button" onclick="togglePassword()">SHOW</button>
+                <input type="password" id="password" name="password" placeholder="密碼" oninput="validatePassword()" value="Aa1234567890">
+                <button type="button" class="toggleButton" onclick="togglePassword()">SHOW</button>
             </div>
             <!-- 再次輸入密碼 -->
             <div class="form-group">
-                <input type="password" id="confirm-password" name="confirm-password" placeholder="再次輸入密碼" oninput="validateConfirmPassword()">
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="再次輸入密碼" oninput="validateConfirmPassword()" value="Aa1234567890">
             </div>
 
             <!-- 訊息區域 -->
@@ -185,7 +189,7 @@
 
         function togglePassword() {
             const passwordField = document.getElementById("password");
-            const toggleButton = document.querySelector(".toggle-button");
+            const toggleButton = document.querySelector(".toggleButton");
             if (passwordField.type === "password") {
                 passwordField.type = "text";
                 toggleButton.textContent = "HIDE";
@@ -194,7 +198,18 @@
                 toggleButton.textContent = "SHOW";
             }
         }
-
+        function validatePhone() {
+            const phone = document.getElementById("phoneNumber").value;
+            const phoneField = document.getElementById("phoneNumber");
+            const phonePattern = /^09\d{8}$/;
+            console.log("validatePhone")
+            if (phonePattern.test(phone)) {
+                phoneField.style.borderColor = "#4CAF50"; // 綠色表示合法
+            } else {
+                phoneField.style.borderColor = "#FF0000"; // 紅色表示不合法
+            }
+            validateSubmitButton();
+        }
         function validateEmail() {
             const email = document.getElementById("email").value;
             const emailField = document.getElementById("email");
@@ -227,17 +242,18 @@
             const numberValid = /\d/.test(password);
             updateCriteria(numberCriteria, numberValid);
 
+
             validateSubmitButton();
         }
 
         function validateConfirmPassword() {
             const password = document.getElementById("password").value;
-            const confirmPassword = document.getElementById("confirm-password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
 
             if (confirmPassword === password) {
-                document.getElementById("confirm-password").style.borderColor = "#4CAF50";
+                document.getElementById("confirmPassword").style.borderColor = "#4CAF50";
             } else {
-                document.getElementById("confirm-password").style.borderColor = "#FF0000";
+                document.getElementById("confirmPassword").style.borderColor = "#FF0000";
             }
 
             validateSubmitButton();
@@ -245,17 +261,21 @@
 
         function validateSubmitButton() {
             const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            const confirmPassword = document.getElementById("confirm-password").value;
+            const phone = document.getElementById("phoneNumber").value;
 
-            const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); // Email 格式檢查
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            const phoneValid = /^09\d{8}$/.test(phone);
+
             const lengthValid = document.getElementById("length").classList.contains("valid");
             const letterValid = document.getElementById("letter").classList.contains("valid");
             const numberValid = document.getElementById("number").classList.contains("valid");
 
             const submitButton = document.getElementById("submitButton");
 
-            if (emailValid && lengthValid && letterValid && numberValid && password === confirmPassword) {
+            if (phoneValid && emailValid && lengthValid && letterValid && numberValid && password === confirmPassword) {
                 submitButton.classList.add("enabled");
                 submitButton.disabled = false;
             } else {
@@ -274,9 +294,6 @@
             }
         }
 
-        function submitForm() {
-            alert("註冊成功！");
-        }
     </script>
 </body>
 </html>
