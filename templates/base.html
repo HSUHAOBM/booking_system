@@ -18,18 +18,14 @@
             <img src="{% static 'images/home-icon.png' %}" alt="首頁" class="logo-icon">
         </a>
 
-        <!-- 中間功能按鈕 -->
-        <nav class="icon-nav">
+        <!-- 右側帳號 -->
+        <div class="icon-profile">
             <a href="/appointments/" class="icon-item" data-tooltip="預約">
                 <i class="fas fa-calendar-check"></i>
             </a>
             <a href="/store/" class="icon-item" data-tooltip="店鋪管理">
                 <i class="fas fa-store"></i>
             </a>
-        </nav>
-
-        <!-- 右側帳號 -->
-        <div class="icon-profile">
             <a href="/profile/" class="icon-item" data-tooltip="我的帳號">
                 <i class="fas fa-user-circle"></i>
             </a>
@@ -46,4 +42,21 @@
         <p>© 2024 預約系統 - Powered by Django</p>
     </footer>
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const nav = document.querySelector(".scrollable-nav");
+
+        // 檢查是否超出寬度
+        if (nav.scrollWidth > nav.clientWidth) {
+            nav.classList.add("show-scroll-hint");
+        }
+
+        // 監聽滾動事件
+        nav.addEventListener("scroll", () => {
+            nav.classList.remove("show-scroll-hint");
+        });
+    });
+</script>
+
 </html>

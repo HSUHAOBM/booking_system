@@ -195,5 +195,6 @@ LOGGING = {
     },
 }
 
-# 登入後跳轉路徑
+# 登入後跳轉路徑 && 登入路徑
 LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_URL = '/users/login/'

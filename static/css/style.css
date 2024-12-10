@@ -29,8 +29,8 @@ body {
     border-radius: 50%;
 }
 
-/* 中間功能按鈕 */
-.icon-nav {
+/* 右側功能按鈕 */
+.icon-profile {
     display: flex;
     gap: 20px;
 }
@@ -87,9 +87,6 @@ body {
     border-top: 1px solid #ddd;
 }
 
-
-
-
 /* 功能頁布局 */
 .main-layout {
     display: flex;
@@ -132,6 +129,82 @@ body {
 /* 右側內容區域 */
 .content {
     flex-grow: 1;
-    padding: 20px;
     background-color: #fff;
+}
+
+/* 滑動導航容器 */
+.scrollable-nav {
+    display: flex;
+    overflow-x: auto; /* 開啟橫向滾動 */
+    white-space: nowrap; /* 防止導航按鈕換行 */
+    background-color: #f5f6f8; /* 背景色與整體一致 */
+    border-bottom: 1px solid #ddd; /* 下邊框 */
+    padding: 10px 0; /* 增加上下空隙 */
+}
+
+/* 滑動項目 */
+.nav-items {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-items li {
+    margin: 0 10px; /* 增加項目間距 */
+}
+
+.nav-items li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background-color: #e4e6eb;
+    color: #1877f2;
+}
+
+/* 隱藏滾動條（可選） */
+.scrollable-nav::-webkit-scrollbar {
+    display: none;
+}
+
+/* 功能區包裹容器 */
+.feature-container {
+    padding: 0 20px; /* 左右邊距設置 */
+    max-width: 1200px; /* 限制內容寬度（可選） */
+    margin: 0 auto; /* 居中內容 */
+    box-sizing: border-box; /* 確保內邊距不影響寬度計算 */
+}
+
+/* 響應式設計 */
+@media (max-width: 767px) {
+    .sidebar {
+        display: none; /* 小螢幕隱藏左側選單 */
+    }
+
+    .scrollable-nav {
+        display: flex; /* 小螢幕顯示上方導覽按鈕 */
+        scroll-behavior: smooth; /* 平滑滾動 */
+
+    }
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        display: block; /* 寬螢幕顯示左側選單 */
+    }
+
+    .main-layout {
+        flex-direction: row; /* 寬螢幕切換回左右布局 */
+    }
+
+    .scrollable-nav {
+        display: none; /* 寬螢幕隱藏上方導覽按鈕 */
+    }
 }

@@ -44,7 +44,47 @@
 
     <!-- 右側內容區域 -->
     <main class="content">
-        {% block feature_content %}{% endblock %}
+
+        <!-- 新增橫向滑動導航欄 -->
+        <div class="scrollable-nav">
+            <ul class="nav-items">
+                <li>
+                    <a href="{% url 'store:store_list' %}"
+                       class="{% if request.resolver_match.url_name == 'store_list' %}active{% endif %}">
+                        店鋪列表
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'store:role_category_list' %}"
+                       class="{% if request.resolver_match.url_name == 'role_category_list' %}active{% endif %}">
+                        角色分類
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'store:service_list' %}"
+                       class="{% if request.resolver_match.url_name == 'service_list' %}active{% endif %}">
+                        服務管理
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'store:staff_list' %}"
+                       class="{% if request.resolver_match.url_name == 'staff_list' %}active{% endif %}">
+                        人員管理
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'store:appointment_list' %}"
+                       class="{% if request.resolver_match.url_name == 'appointment_list' %}active{% endif %}">
+                        預約管理
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 功能頁特定內容 -->
+        <div class="feature-container">
+            {% block feature_content %}{% endblock %}
+        </div>
     </main>
 </div>
 {% endblock %}
