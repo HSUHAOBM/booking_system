@@ -1,35 +1,49 @@
 {% extends 'base.html' %}
 
-{% block title %}預約功能{% endblock %}
+{% block title %}
+  預約功能
+{% endblock %}
 
 {% block content %}
-<div class="main-layout">
+  <div class="main-layout">
     <!-- 左側功能選單 -->
     <aside class="sidebar">
-        <nav>
-            <ul>
-                <li><a href="{% url 'appointments:my_appointments' %}" class="{% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}">我的預約</a></li>
-                <li><a href="{% url 'appointments:appointment_history' %}" class="{% if request.resolver_match.url_name == 'appointment_history' %}active{% endif %}">預約紀錄</a></li>
-                <li><a href="{% url 'appointments:review_history' %}" class="{% if request.resolver_match.url_name == 'review_history' %}active{% endif %}">評價紀錄</a></li>
-            </ul>
-        </nav>
+      <nav>
+        <ul>
+          <li>
+            <a href="{% url 'appointments:my_appointments' %}" class="{% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}">我的預約</a>
+          </li>
+          <li>
+            <a href="{% url 'appointments:appointment_history' %}" class="{% if request.resolver_match.url_name == 'appointment_history' %}active{% endif %}">預約紀錄</a>
+          </li>
+          <li>
+            <a href="{% url 'appointments:review_history' %}" class="{% if request.resolver_match.url_name == 'review_history' %}active{% endif %}">評價紀錄</a>
+          </li>
+        </ul>
+      </nav>
     </aside>
 
     <!-- 右側內容區域 -->
     <main class="content">
-
-        <!-- 新增橫向滑動導航欄 -->
-        <div class="scrollable-nav">
-            <ul class="nav-items">
-                <li><a href="{% url 'appointments:my_appointments' %}" class="{% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}">我的預約</a></li>
-                <li><a href="{% url 'appointments:appointment_history' %}" class="{% if request.resolver_match.url_name == 'appointment_history' %}active{% endif %}">預約紀錄</a></li>
-                <li><a href="{% url 'appointments:review_history' %}" class="{% if request.resolver_match.url_name == 'review_history' %}active{% endif %}">評價紀錄</a></li>
-            </ul>
-        </div>
-        <!-- 功能頁特定內容 -->
-        <div class="feature-container">
-            {% block feature_content %}{% endblock %}
-        </div>
+      <!-- 新增橫向滑動導航欄 -->
+      <div class="scrollable-nav">
+        <ul class="nav-items">
+          <li>
+            <a href="{% url 'appointments:my_appointments' %}" class="{% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}">我的預約</a>
+          </li>
+          <li>
+            <a href="{% url 'appointments:appointment_history' %}" class="{% if request.resolver_match.url_name == 'appointment_history' %}active{% endif %}">預約紀錄</a>
+          </li>
+          <li>
+            <a href="{% url 'appointments:review_history' %}" class="{% if request.resolver_match.url_name == 'review_history' %}active{% endif %}">評價紀錄</a>
+          </li>
+        </ul>
+      </div>
+      <!-- 功能頁特定內容 -->
+      <div class="feature-container">
+        {% block feature_content %}
+        {% endblock %}
+      </div>
     </main>
-</div>
+  </div>
 {% endblock %}

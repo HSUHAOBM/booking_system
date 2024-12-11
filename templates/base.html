@@ -2,61 +2,57 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}預約系統{% endblock %}</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+        預約系統
+      {% endblock %}
+    </title>
     <!-- Font Awesome 圖示庫 -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
     <!-- 頂部導航欄 -->
     <header class="top-nav">
-        <!-- LOGO 和首頁 -->
-        <a href="/" class="logo-item" data-tooltip="首頁">
-            <img src="{% static 'images/home-icon.png' %}" alt="首頁" class="logo-icon">
-        </a>
+      <!-- LOGO 和首頁 -->
+      <a href="/" class="logo-item" data-tooltip="首頁"><img src="{% static 'images/home-icon.png' %}" alt="首頁" class="logo-icon" /></a>
 
-        <!-- 右側帳號 -->
-        <div class="icon-profile">
-            <a href="/appointments/" class="icon-item" data-tooltip="預約">
-                <i class="fas fa-calendar-check"></i>
-            </a>
-            <a href="/store/" class="icon-item" data-tooltip="店鋪管理">
-                <i class="fas fa-store"></i>
-            </a>
-            <a href="/profile/" class="icon-item" data-tooltip="我的帳號">
-                <i class="fas fa-user-circle"></i>
-            </a>
-        </div>
+      <!-- 右側帳號 -->
+      <div class="icon-profile">
+        <a href="/appointments/" class="icon-item" data-tooltip="預約"><i class="fas fa-calendar-check"></i></a>
+        <a href="/store/" class="icon-item" data-tooltip="店鋪管理"><i class="fas fa-store"></i></a>
+        <a href="/profile/" class="icon-item" data-tooltip="我的帳號"><i class="fas fa-user-circle"></i></a>
+      </div>
     </header>
 
     <!-- 主體內容 -->
     <main class="main-content">
-        {% block content %}{% endblock %}
+      {% block content %}
+      {% endblock %}
     </main>
 
     <!-- 頁腳 -->
     <footer class="footer">
-        <p>© 2024 預約系統 - Powered by Django</p>
+      <p>© 2024 預約系統 - Powered by Django</p>
     </footer>
-</body>
+  </body>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const nav = document.querySelector(".scrollable-nav");
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const nav = document.querySelector('.scrollable-nav')
 
-        // 檢查是否超出寬度
-        if (nav.scrollWidth > nav.clientWidth) {
-            nav.classList.add("show-scroll-hint");
-        }
+      // 檢查是否超出寬度
+      if (nav.scrollWidth > nav.clientWidth) {
+        nav.classList.add('show-scroll-hint')
+      }
 
-        // 監聽滾動事件
-        nav.addEventListener("scroll", () => {
-            nav.classList.remove("show-scroll-hint");
-        });
-    });
-</script>
-
+      // 監聽滾動事件
+      nav.addEventListener('scroll', () => {
+        nav.classList.remove('show-scroll-hint')
+      })
+    })
+  </script>
 </html>
