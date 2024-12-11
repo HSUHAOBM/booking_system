@@ -15,11 +15,23 @@ def admin_dashboard(request):
 app_name = "users"
 
 urlpatterns = [
-    path('register/', views.register, name='register'),  # 註冊頁面
-    path('login/', views.login, name='login'),  # 登入頁面
-    path('logout/', views.logout, name='logout'),  # 登出（可選）
+    # 註冊、登入與登出
+    path('register/', views.register, name='register'),
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
 
+    # 使用者儀表板
     path('customer_dashboard/', customer_dashboard, name='customer_dashboard'),
-
     path('dashboard/', views.dashboard, name='dashboard'),  # 登入後的主頁
+
+    # 帳號管理中心
+    path('account_center', views.account_center, name='account_center'),
+
+    # 隱私設定
+    path('roles/', views.privacy_settings, name='privacy_settings'),
+
+    # 協助與支援
+    path('services/', views.support_help, name='support_help'),
+
+
 ]

@@ -179,3 +179,21 @@ def logout(request):
 @login_required
 def dashboard(request):
     return render(request, 'users/dashboard.html')
+
+
+# 帳號管理中心
+@login_required
+def account_center(request):
+    return render(request, 'users/account_center.html')
+
+
+# 隱私設定
+@login_required
+def privacy_settings(request):
+    return render(request, 'users/privacy_settings.html')
+
+
+# 協助與支援
+@login_required
+def support_help(request):
+    return render(request, 'users/support_help.html')
